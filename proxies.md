@@ -1,14 +1,12 @@
 # Integrity checks on Proxies
 
-***Note. This is a first draft; many statement could probably formulated more clearly.***
-
 This page aims to identify the necessary and invariant checks on [Proxies] (https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots)
 in order to maintain the [invariants of internal methods] (https://tc39.github.io/ecma262/#sec-invariants-of-the-essential-internal-methods)
 as modelled in _[invariants.md] (/invariants.md)_.
 
 ## Fundemental observation methods
 
-The following internal methods . We called them the **<dfn>fundamental observation methods</dfn>**
+The following internal methods are intended to be purely observational. We called them the **<dfn>fundamental observation methods</dfn>**
 * \[\[IsExtensible]] ()
 * \[\[GetPrototypeOf]] ()
 * \[\[OwnPropertyKeys]] ()
@@ -26,7 +24,7 @@ We exclude from this criterion states depending on the time passing, like the re
 
 Here, consistency means:
 * the value of a _nonabrupt_ completion returned by the same fundemental observation method will always be the same;
-* if the value of a nonabrupt completion of \[\[GetOwnProperty]] (_P_) is **undefined** then the value of a nonabrupt completion of \[\[OwnPropertyKey]] () shall be a List containing the key _P_, and conversly.
+* if the value of a nonabrupt completion of \[\[GetOwnProperty]] (_P_) is not **undefined**, respectively is **undefined**, then the value of a nonabrupt completion of \[\[OwnPropertyKey]] () shall be a List containing _P_, respectively not containing _P_, and conversly.
 
 Note that abrupt completions are irrelevant for our purpose.
 
@@ -36,14 +34,14 @@ On the other hand, Proxy objects may be quantum. Although it is probably not a g
  
 ## Integrity checks of trapped Proxy internal methods
 
-When an internal method \[\[_Method]] for which a trap is defined is called on a Proxy, the following steps are taken:
+When an internal method \[\[_Method_]] for which a trap is defined is called on a Proxy, the following steps are taken:
 
 1. The trap is invoked, and the result is transformed in order to comply with the form of the value that should be returned from the internal method (e.g., for \[\[OwnPropertyKeys]](), the result is coerced to a List of property keys).
-2. An integrity check is made by comparing that result with results returned by different invocations of of fundemental observation methods of the target object.
+2. An integrity check is made by comparing that result with results returned by different invocations of the fundemental observation methods on the target object.
 
-If the integrity check is not passed, a TypeError exception is thrown. Also, any abrupt completion ends the algorithm immediately and is forwarded.
+If the integrity check is not passed, a TypeError exception is thrown. Also, any abrupt completion terminates the algorithm immediately and is forwarded.
 
-Let us denote by **<dfn>IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_)</dfn>** the abstract operation defining the integrity check associated to \[\[_Method_]], where _arguments_ is the list of arguments with which the \[\[_Method_]] was invoked, _result_ is the value that the Proxy wants to return, and _target_ is the target object of the Proxy. When terminating nonabruptly, that operation shall return either **true** or **false**, depending on whether the integrity check is passed.
+Let **<dfn>IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_)</dfn>** denotes the abstract operation defining the integrity check associated to \[\[_Method_]], where _arguments_ is the List of the arguments with which the \[\[_Method_]] was invoked, _result_ is the value that the Proxy wants to return, and _target_ is the target object of the Proxy. When terminating nonabruptly, that operation shall return either **true** or **false**, depending on whether the integrity check is passed.
 
 We want to define the various IntegrityCheck\_<i>Method</i> algorithms so that the two following conditions are satisfied.
 
@@ -60,9 +58,9 @@ We restrict ourself to _nonquantum_ target objects, because quantum objects woul
 
 We want to prove the following:
 
-> Given Condition 1 above, in order to satisfy Condition 2, it is necessary and sufficient that the IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_) abstract operations return **false** (or an abrupt completion) unless the following conditions hold:
+> Given Condition 1 above, in order to satisfy Condition 2, it is necessary and sufficient that the IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_) abstract operations return **false** (or an abrupt completion) unless the two following conditions hold:
 >
-> A. For any observation “character: value” that would be made on the Proxy by returning _result_, if a lock “@character: _value2_” may be put on _target_ (by invoking fundemental observation methods on it), then _value2_ must be the same as _value_.
+> A. For any observation “character: _value_” that would be made on the Proxy by returning _result_, if a lock “@character: _value2_” may be put on _target_ (by invoking fundemental observation methods on it), then _value2_ must be the same as _value_.
 >
 > B. Assuming that all the locks that may be put on _target_ (by invoking fundemental observation methods on it) are also put on the Proxy, for any lock “@character: value” that would be put on the Proxy by returning _result_, if the observation “character: _value2_” may be performed on _target_, then _value2_ must be the same as _value_.
 
@@ -74,11 +72,11 @@ The following algorithm is a valid implementation for IntegrityCheck\_Delete(_ar
 
 Steps 4-7 of the algorithm mirror steps 9-12 of the currently specced [\[\[Delete\]\] internal method of Proxies] (https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots-delete-p) (where “throw a TypeError exception” is replaced by “return false”, meaning that the integrity check is not passed, and, similarly, “return result” is replaced by “return **true**”.)
 
-Steps 8-9 are a currently missing check that is proposed in [PR 666] (https://github.com/tc39/ecma262/pull/666/files)
+Steps 8-9 are a currently missing check that is proposed in [PR 666] (https://github.com/tc39/ecma262/pull/666/files).
 
 1. Assert: _result_ is a Boolean.
 2. Assert: _arguments_ is a List containing a unique element, which is a property key.
-3. Let _P_ the unique item of _arguments_
+3. Let _P_ the unique item of _arguments_.
 4. If _result_ is **false**, return **true**.
 5. Let _targetDesc_ be ? _target_.\[\[GetOwnProperty]](_P_).
 6. If _targetDesc_ is **undefined**, return *true*.
@@ -91,7 +89,7 @@ Let us analyse that algorithm. Steps 1-3 extract the relevant values, namely _re
 
 Step 4: if _result_ is **false**, no observation would be made on the Proxy, so that the integrity check is passed.
 
-Otherwise, _result_ is **true**, and the following observation would be made an the Proxy:
+Otherwise, _result_ is **true**, and the following observation would be made on the Proxy:
 
 > exists(_P_): false
 
