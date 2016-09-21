@@ -1,6 +1,6 @@
 # Integrity checks on Proxies
 
-This page aims to identify the necessary and invariant checks on [Proxies] (https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots)
+This page aims to identify minimal invariant checks needed on trapped internal methods of [Proxies] (https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots)
 in order to maintain the [invariants of internal methods] (https://tc39.github.io/ecma262/#sec-invariants-of-the-essential-internal-methods)
 as modelled in _[invariants.md] (/invariants.md)_.
 
