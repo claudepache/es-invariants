@@ -48,8 +48,8 @@ Internal method    |   Returned value  | Observation performed
 \[\[DefineProperty]]<br> (_P_, { \[\[Enumerable]]: _E_ }) | **true** | exists(_P_): **true**<br>enumerable(_P_): _E_
 \[\[DefineProperty]]<br> (_P_, { \[\[Value]]: _V_ }) | **true** | exists(_P_): **true**<br>type(_P_): data<br>value(_P_): _V_
 \[\[DefineProperty]]<br> (_P_, { \[\[Writable]]: _W_ }) | **true** | exists(_P_): **true**<br>type(_P_): data<br>writable(_P_): _W_
-\[\[DefineProperty]]<br> (_P_, { \[\[Getter]]: _G_ }) | **true** | exists(_P_): **true**<br>type(_P_): accessor<br>getter(_P_): _G_<br>getter-undefined(_P_): (_G_ is **undefined**)
-\[\[DefineProperty]]<br> (_P_, { \[\[Setter]]: _S_ }) | **true** | exists(_P_): **true**<br>type(_P_): accessor<br>setter(_P_): _S_<br>setter-undefined(_P_): (_S_ is **undefined**)
+\[\[DefineProperty]]<br> (_P_, { \[\[Gett]]: _G_ }) | **true** | exists(_P_): **true**<br>type(_P_): accessor<br>getter(_P_): _G_<br>getter-undefined(_P_): (_G_ is **undefined**)
+\[\[DefineProperty]]<br> (_P_, { \[\[Set]]: _S_ }) | **true** | exists(_P_): **true**<br>type(_P_): accessor<br>setter(_P_): _S_<br>setter-undefined(_P_): (_S_ is **undefined**)
 \[\[HasProperty]] (_P_) | **false** | exists(_P_): **false**
 \[\[Get]] (_P_, _Receiver_) | _any_ | _see below_
 \[\[Set]] (_P_, _V_, _Receiver_) | **true** | _see below_
