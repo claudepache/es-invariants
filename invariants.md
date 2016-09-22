@@ -83,21 +83,27 @@ for example, the lock “@prototype: _V_” depends on “@extensible: **false**
   * @exists(_P_): **false**
 * @configurable(_P_): **false**
   * @exists(_P_): **true**
+  * @type(_P_): _any_
   * @enumerable(_P_): _any_
-  * @type(_P_): data
-    * @writable(_P_): **false**
-      * @value(_P_): _any_
-  * @type(_P_): accessor
-    * @getter(_P_): _any_
-    * @getter-undefined(_P_): _any_
-    * @setter(_P_): _any_
-    * @setter-undefined(_P_): _any_
+  * @writable(_P_): **false**
+    * @value(_P_): _any_
+  * @getter(_P_): _any_
+  * @getter-undefined(_P_): _any_
+  * @setter(_P_): _any_
+  * @setter-undefined(_P_): _any_
 
 ## Putting a lock
 
 A lock “@character: value” is put on an Object when:
+
 * all the locks on which “@character: value” depends are previously put on that Object;
 * an observation “character: value” is done on that Object.
+
+For example the lock “@value: 7” is put when the following observations are performed, in order:
+
+1. “configurable: false” — that puts the lock “@configurable: false”;
+2. “writable: false” — that puts the lock “@writable: false”;
+3. “value: 7”.
 
 ## Invariants of internal methods
 
@@ -115,7 +121,7 @@ Let _O_ be an Object.
 
 1. _O_.\[\[SetPrototypeOf]] (_V_) returns **true** — an observation ”prototype: _V_” is done. No lock is put.
 1. _O_.\[\[IsExtensible]] () returns **true** — an observation ”extensible: **true**” is done. No lock is put.
-1. _O_.\[\[PreventExtensins]] () returns **true** — an observation ”extensible: **false**” is done. The lock “@extensible: **false**” is put.
+1. _O_.\[\[PreventExtensions]] () returns **true** — an observation ”extensible: **false**” is done. The lock “@extensible: **false**” is put.
 1. _O_.\[\[GetPrototypeOf]] () returns _W_ — an observation ”prototype: _W_” is done. The lock “@prototype: _W_” is put.
 1. _O_.\[\[SetPrototypeOf]] (_W_) returns **true** — an observation ”prototype: _W_” is done. No new lock is put.
 1. _O_.\[\[SetPrototypeOf]] (_X_), where _X_ is not _W_, returns **true** — an observation ”prototype: _X_” is done, breaking the lock “@prototype: _W_”: that shall not have happened.
