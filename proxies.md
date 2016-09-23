@@ -12,6 +12,16 @@ The following internal methods are intended to be purely observational. We calle
 * \[\[OwnPropertyKeys]] ()
 * \[\[GetOwnProperty]] (_P_)
 
+They are used to [observe the characters] (/invariants.md#observations) of Objects according to the following table:
+
+Character  |  Internal method
+-----------|-----------------
+prototype  |  \[\[GetPrototypeOf()]] ()
+extensible |  \[\[IsExtensible]] ()
+exists(_P_) _(all keys)_  |  \[\[OwnPropertyKeys]] ()
+configurable(_P_)<br>exists(_P_) _(single key)_<br>enumerable(_P_)<br>type(_P_)<br>value(_P_)<br>getter(_P_)<br>getter-undefined(_P_)<br>setter(_P_)<br>setter-undefined(_P_)  |  \[\[GetOwnProperty]] (_P_)
+
+
 ## Nonquantum objects
 
 We first concentrate on [Proxies] (https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots) whose target object can be observed without disturbing the state of the program. Specifically we define a **<dfn>nonquantum object</dfn>** as an [Object] (https://tc39.github.io/ecma262/#sec-object-type) whose fundemental observation methods satisfy the two following conditions:
@@ -66,7 +76,21 @@ We want to prove the following:
 
 Proof: TBW
 
-## Application: The integrity check for the \[\[Delete]] method
+## Algorithm for the Integry Check methods
+
+As an application of the previous section, we can derive algorithms for IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i>:
+
+1. Determine the characters that would be observed on the Proxy if the method return _result_.
+2. For each “_character: _value_” that would be observed:
+  1. Observe “character: _value2_” on _target_ by invoking the corresponding [fundemantal observation method] (#fundemental-observation-methods).
+  2. If _value2_ is different from _value_,
+    1. Check whether the lock “@character: _value2_” can be put on _target_, by invoking the [fundemantal observation methods] (#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on] (/invariants.md#locks). If yes, return **false** (Condition A).
+    1. Check whether the lock “@character: _value_” could be put on _target_ if it were observed on it, by invoking the [fundamental observation methods] (#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on] (/invariants.md#locks). If yes, return **false** (Condition B).
+3. Return **true**.
+
+Because we have assumed that _target_ is [nonquantum] (#nonquantum-objects), changing the order and the number of calls to its fundemental internal methods is not observable (except when terminating abruptly), so we can avoid to repeat calls of same internal methods with same arguments, and we can reorder them at will (even if, formally, putting a lock on _target_ would need that the methods are called in particular order).
+
+### Example: The integrity check for the \[\[Delete]] method
 
 The following algorithm is a valid implementation for IntegrityCheck\_Delete(_arguments_, _result_, _target_).
 
