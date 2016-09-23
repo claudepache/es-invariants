@@ -12,14 +12,14 @@ The following internal methods are intended to be purely observational. We calle
 * \[\[OwnPropertyKeys]] ()
 * \[\[GetOwnProperty]] (_P_)
 
-They are used to [observe the characters] (/invariants.md#observations) of Objects according to the following table:
+They are used to [observe the characters] (/invariants.md#observations) of Objects without modifying them, according to the following table:
 
 Character  |  Internal method
 -----------|-----------------
-prototype  |  \[\[GetPrototypeOf()]] ()
+prototype  |  \[\[GetPrototypeOf]] ()
 extensible |  \[\[IsExtensible]] ()
 exists(_P_) _(all keys)_  |  \[\[OwnPropertyKeys]] ()
-configurable(_P_)<br>exists(_P_) _(single key)_<br>enumerable(_P_)<br>type(_P_)<br>value(_P_)<br>getter(_P_)<br>getter-undefined(_P_)<br>setter(_P_)<br>setter-undefined(_P_)  |  \[\[GetOwnProperty]] (_P_)
+configurable(_P_)<br>exists(_P_) _(single key)_<br>enumerable(_P_)<br>type(_P_)<br>writable(_P_)<br>value(_P_)<br>getter(_P_)<br>getter-undefined(_P_)<br>setter(_P_)<br>setter-undefined(_P_)  |  \[\[GetOwnProperty]] (_P_)
 
 
 ## Nonquantum objects
