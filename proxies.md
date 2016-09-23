@@ -55,12 +55,12 @@ Let **<dfn>IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_)</dfn>*
 
 We want to define the various IntegrityCheck\_<i>Method</i> algorithms so that the two following conditions are satisfied.
 
-1. IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i> shall return **true** if all [observations] (/invariants.md#observations) that would be made on the Proxy by returning _result_, may be made on _target_ by invoking fundamental observation methods on it.
+> I. IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i> shall return **true** if all [observations] (/invariants.md#observations) that would be made on the Proxy by returning _result_, may be made on _target_ by invoking fundamental observation methods on it.
 
 For example, let _P_ be a Proxy with target object _T_. Suppose that the trap triggered by calling _P_.\[\[PreventExtensions]] () wants to return **true**. That would trigger the observation “extensible: false” on _P_.
 Then, if the same observation can be made on _T_, e.g. by calling T.\[\[IsExtensible]]() and getting the value **false**, the integrity check is passed.
 
-<ol start=2><li>If the target of a Proxy is a nonquantum object that observes the <a href="https://github.com/claudepache/es-invariants/blob/master/invariants.md#invariants-of-internal-methods">Invariants of internal methods</a>, then the Proxy shall observe those invariants.</ol>
+> II. If the target of a Proxy is a nonquantum object that observes the [Invariants of internal methods] (/invariants.md#invariants-of-internal-methods), then the Proxy shall observe those invariants.</ol>
 
 We restrict ourself to _nonquantum_ target objects, because quantum objects would lead to inextricable complications in edge cases; that issue will be discussed somewhere else (TBW).
 
@@ -68,13 +68,15 @@ We restrict ourself to _nonquantum_ target objects, because quantum objects woul
 
 We want to prove the following:
 
-> Given Condition 1 above, in order to satisfy Condition 2, it is necessary and sufficient that the IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_) abstract operations return **false** (or an abrupt completion) unless the two following conditions hold:
+> Given Condition I above, in order to satisfy Condition II, it is necessary and sufficient that the IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_) abstract operations return **false** (or an abrupt completion) unless the two following conditions hold:
 >
 > A. For any observation “character: _value_” that would be made on the Proxy by returning _result_, if a lock “@character: _value2_” may be put on _target_ (by invoking fundemental observation methods on it), then _value2_ must be the same as _value_.
 >
 > B. Assuming that all the locks that may be put on _target_ (by invoking fundemental observation methods on it) are also put on the Proxy, for any lock “@character: value” that would be put on the Proxy by returning _result_, if the observation “character: _value2_” may be performed on _target_, then _value2_ must be the same as _value_.
 
-Proof: TBW
+### proof
+
+See _[proxies-proof.md] (proxies-proof.md)_.
 
 ## Algorithm for the Integry Check methods
 
