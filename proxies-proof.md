@@ -13,9 +13,9 @@ we want that to prove that the following condition is satisfied:
 
 when the IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_) abstract operations returns **false** unless the two following conditions are enforced:
 
-> A. For any observation “character: _value_” that would be made on the Proxy by returning _result_, if a lock “@character: _value2_” may be put on _target_ (by invoking fundemental observation methods on it), then _value2_ must be the same as _value_.
+> A. For any observation “character: _value_” that would be made on the Proxy by returning _result_, if a lock “@character: _valueT_” may be put on _target_ (by invoking fundemental observation methods on it), then _valueT_ must be the same as _value_.
 >
-> B. Assuming that all the locks that may be put on _target_ (by invoking fundemental observation methods on it) are also put on the Proxy, for any lock “@character: value” that would be put on the Proxy by returning _result_, if the observation “character: _value2_” may be performed on _target_, then _value2_ must be the same as _value_.
+> B. Assuming that all the locks that may be put on _target_ (by invoking fundemental observation methods on it) are also put on the Proxy, for any lock “@character: value” that would be put on the Proxy by returning _result_, if the observation “character: _valueT_” may be performed on _target_, then _valueT_ must be the same as _value_.
 
 
 
@@ -69,25 +69,25 @@ result = <desired returned value>
 Reflect[Method](P, ...args)
 ```
 
-As part of the algorithm, IntegrityCheck\_<i>Method</i> is run, that would trigger “character: _value2_” observation on _target_. By assumption it is passed.
+As part of the algorithm, IntegrityCheck\_<i>Method</i> is run, that would trigger “character: _valueT_” observation on _target_. By assumption it is passed.
 
 5\. Repeat step 3.
 
 Now we can show:
 
-Condition A. Let us suppose that “@character: _value2_”  is put on _target_ during the integrity check of step 4. Then, the same lock is put on _P_ during step 3. Because “character: value” is observed on _P_ during step 4, that imposes that _value_ shall be equal _value2_.
+Condition A. Let us suppose that “@character: _valueT_”  is put on _target_ during the integrity check of step 4. Then, the same lock is put on _P_ during step 3. Because “character: value” is observed on _P_ during step 4, that imposes that _value_ shall be equal _valueT_.
 
-Condition B. Let us suppose that all locks on which “@character: value” depends are put on _target_ during the integrity check of step 4. Then the same locks are put on _P_ during step 3, and the completion of step 4 will put the “@character: _value_” lock on _P_. Finally, step 5 will trigger the observation “character: _value2_” on _P_, imposing that _value2_ shall be the same as _value_.
+Condition B. Let us suppose that all locks on which “@character: value” depends are put on _target_ during the integrity check of step 4. Then the same locks are put on _P_ during step 3, and the completion of step 4 will put the “@character: _value_” lock on _P_. Finally, step 5 will trigger the observation “character: _valueT_” on _P_, imposing that _valueT_ shall be the same as _value_.
 
 
 ## Sufficiency
 
-Let us assume that some “@character: _value_” lock has been put on a proxy _P_, and let us show that we cannot observe “character: _valueB_” on _P_ unless _valueB_ is the same as _value_. First, we show that
+Let us assume that some “@character: _value_” lock has been put on a proxy _P_, and let us show that we cannot observe “character: _value2_” on _P_ unless _value2_ is the same as _value_. First, we show that
 
 > The same “@character: _value_” lock is put on _target_ at the latest during the call of the internal method that put “@character: _value_” lock on _P_.
 
 By using recursion, we can assume that this is true for all locks on which “@character: _value_” depends; so it suffices to show that “character: _value_” is observed on the _target_.
 If the internal method is not trapped, this is evident. If it is trapped, the enforcement of  Condition B during the integrity check will trigger such an observation.
 
-Now, let us attempt observe “character: _valueB_” on _P_ by calling some internal method on _P_. If it is not trapped, because of the existing “@character: _value_” lock on _target_, we observe “character: _value_” again. If it is trapped, the enforcement of  Condition A will guarantee that _valueB_ shall be the same as _value_.
+Now, let us attempt observe “character: _value2_” on _P_ by calling some internal method on _P_. If it is not trapped, because of the existing “@character: _value_” lock on _target_, we observe “character: _value_” again. If it is trapped, the enforcement of  Condition A will guarantee that _value2_ shall be the same as _value_.
 
