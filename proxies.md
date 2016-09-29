@@ -70,9 +70,9 @@ We want to prove the following:
 
 > Given Condition I above, in order to satisfy Condition II, it is necessary and sufficient that the IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_) abstract operations return **false** (or an abrupt completion) unless the two following conditions hold:
 >
-> A. For any observation “character: _value_” that would be made on the Proxy by returning _result_, if a lock “@character: _value2_” may be put on _target_ (by invoking fundemental observation methods on it), then _value2_ must be the same as _value_.
+> A. For any observation “character: _value_” that would be made on the Proxy by returning _result_, if a lock “@character: _valueT_” may be put on _target_ (by invoking fundemental observation methods on it), then _valueT_ must be the same as _value_.
 >
-> B. Assuming that all the locks that may be put on _target_ (by invoking fundemental observation methods on it) are also put on the Proxy, for any lock “@character: value” that would be put on the Proxy by returning _result_, if the observation “character: _value2_” may be performed on _target_, then _value2_ must be the same as _value_.
+> B. Assuming that all the locks that may be put on _target_ (by invoking fundemental observation methods on it) are also put on the Proxy, for any lock “@character: value” that would be put on the Proxy by returning _result_, if the observation “character: _valueT_” may be performed on _target_, then _valueT_ must be the same as _value_.
 
 ### proof
 
@@ -84,9 +84,9 @@ As an application of the previous section, we can derive algorithms for Integrit
 
 1. Determine the characters that would be observed on the Proxy if the method return _result_.
 2. For each “_character: _value_” that would be observed:
-  1. Observe “character: _value2_” on _target_ by invoking the corresponding [fundemantal observation method] (#fundemental-observation-methods).
-  2. If _value2_ is different from _value_,
-    1. Check whether the lock “@character: _value2_” can be put on _target_, by invoking the [fundemantal observation methods] (#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on] (/invariants.md#locks). If yes, return **false** (Condition A).
+  1. Observe “character: _valueT_” on _target_ by invoking the corresponding [fundemantal observation method] (#fundemental-observation-methods).
+  2. If _valueT_ is different from _value_,
+    1. Check whether the lock “@character: _valueT_” can be put on _target_, by invoking the [fundemantal observation methods] (#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on] (/invariants.md#locks). If yes, return **false** (Condition A).
     1. Check whether the lock “@character: _value_” could be put on _target_ if it were observed on it, by invoking the [fundamental observation methods] (#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on] (/invariants.md#locks). If yes, return **false** (Condition B).
 3. Return **true**.
 
