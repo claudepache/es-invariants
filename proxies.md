@@ -57,7 +57,7 @@ We want to define the various IntegrityCheck\_<i>Method</i> algorithms so that t
 
 > I. IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i> shall return **true** if all [observations] (/invariants.md#observations) that would be made on the Proxy by returning _result_, may be made on _target_ by invoking fundamental observation methods on it.
 
-For example, let _P_ be a Proxy with target object _T_. Suppose that the trap triggered by calling _P_.\[\[PreventExtensions]] () wants to return **true**. That would trigger the observation “extensible: false” on _P_.
+For example, let _P_ be a Proxy with target object _T_. Suppose that the trap triggered by calling _P_.\[\[PreventExtensions]] () wants to return **true**. That would trigger the observation “extensible: **false**” on _P_.
 Then, if the same observation can be made on _T_, e.g. by calling T.\[\[IsExtensible]]() and getting the value **false**, the integrity check is passed.
 
 > II. If the target of a Proxy is a nonquantum object that observes the [Invariants of internal methods] (/invariants.md#invariants-of-internal-methods), then the Proxy shall observe those invariants.</ol>
@@ -72,7 +72,7 @@ We want to prove the following:
 >
 > A. For any observation “character: _value_” that would be made on the Proxy by returning _result_, if a lock “@character: _valueT_” may be put on _target_ (by invoking fundemental observation methods on it), then _valueT_ must be the same as _value_.
 >
-> B. Assuming that all the locks that may be put on _target_ (by invoking fundemental observation methods on it) are also put on the Proxy, for any lock “@character: value” that would be put on the Proxy by returning _result_, if the observation “character: _valueT_” may be performed on _target_, then _valueT_ must be the same as _value_.
+> B. Assuming that all the locks that may be put on _target_ (by invoking fundemental observation methods on it) are also put on the Proxy, for any lock “@character: _value_” that would be put on the Proxy by returning _result_, if the observation “character: _valueT_” may be performed on _target_, then _valueT_ must be the same as _value_.
 
 ### proof
 
@@ -80,10 +80,10 @@ See _[proxies-proof.md] (proxies-proof.md)_.
 
 ## Algorithm for the Integry Check methods
 
-As an application of the previous section, we can derive algorithms for IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i>:
+As an application of the previous section, we can derive algorithms for IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_)</i>:
 
-1. Determine the characters that would be observed on the Proxy if the method return _result_.
-2. For each “_character: _value_” that would be observed:
+1. Determine the characters that would be observed on the Proxy if the method returned _result_.
+2. For each “character: _value_” that would be observed:
   1. Observe “character: _valueT_” on _target_ by invoking the corresponding [fundemantal observation method] (#fundemental-observation-methods).
   2. If _valueT_ is different from _value_,
     1. Check whether the lock “@character: _valueT_” can be put on _target_, by invoking the [fundemantal observation methods] (#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on] (/invariants.md#locks). If yes, return **false** (Condition A).
@@ -105,10 +105,10 @@ Steps 8-9 are a currently missing check that is proposed in [PR 666] (https://gi
 3. Let _P_ the unique item of _arguments_.
 4. If _result_ is **false**, return **true**.
 5. Let _targetDesc_ be ? _target_.\[\[GetOwnProperty]](_P_).
-6. If _targetDesc_ is **undefined**, return *true*.
+6. If _targetDesc_ is **undefined**, return **true**.
 7. If _targetDesc_.\[\[Configurable]] is **false**, return **false**.
 8. Let _extensibleTarget_ be ? _target_.\[\[IsExtensible]]().
-9. If _extensibleTarget_ is *false*, return **false**.
+9. If _extensibleTarget_ is **false**, return **false**.
 10. Return **true**.
 
 Let us analyse that algorithm. Steps 1-3 extract the relevant values, namely _result_ and _P_.
@@ -121,10 +121,10 @@ Otherwise, _result_ is **true**, and the following observation would be made on 
 
 Steps 5 and 6 checks whether the same observation “exists(_P_): false” may be made on the target. If so, the integrity check is passed.
 
-Otherwise, the observation “exists(_P_): true” is performed on _target_. At this point, we should check whether this is not contradicted by a potential lock “@exists(_P_): true” on _target_ (condition A) or “@exists(_P_): false”  on the Proxy (condition B).
+Otherwise, the observation “exists(_P_): true” is performed on _target_. At this point, we should check whether this is not contradicted by a potential lock “@exists(_P_): true” on _target_ (condition A) or “@exists(_P_): **false**”  on the Proxy (condition B).
 
-In step 7, if _targetDesc_.\[\[Configurable]] is **false**, then the lock “@configurable(_P_): false” is put on _target_, from which it follows that the lock “@exists(_P_): true” is also put on _target_. By Condition A, the integrity check is not passed.
+In step 7, if _targetDesc_.\[\[Configurable]] is **false**, then the lock “@configurable(_P_): false” is put on _target_, from which it follows that the lock “@exists(_P_): **true**” is also put on _target_. By Condition A, the integrity check is not passed.
 
-Steps 8-9: If the observation “extensible: false” is made on _target_, then we have the lock “@extensible: false” on _target_. Now, assuming that such a lock is put on the Proxy, observing “exists(_P_): false” on the Proxy would put the lock “@exists(_P_): false”. By Condition B, the integrity check is not passed.
+Steps 8-9: If the observation “extensible: **false**” is made on _target_, then we have the lock “@extensible: **false**” on _target_. Now, assuming that such a lock is put on the Proxy, observing “exists(_P_): false” on the Proxy would put the lock “@exists(_P_): false”. By Condition B, the integrity check is not passed.
 
 Step 10. Otherwise, no potential lock of the character “exists” may be put, either on the Proxy or on _target_. Therefore the integrity check is passed.
