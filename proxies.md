@@ -96,9 +96,9 @@ Because we have assumed that _target_ is [nonquantum](#nonquantum-objects), chan
 
 The following algorithm is a valid implementation for IntegrityCheck\_Delete(_arguments_, _result_, _target_).
 
-Steps 4-7 of the algorithm mirror steps 9-12 of the currently specced [\[\[Delete\]\] internal method of Proxies](https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots-delete-p) (where “throw a TypeError exception” is replaced by “return false”, meaning that the integrity check is not passed, and, similarly, “return result” is replaced by “return **true**”.)
+Steps 4-7 of the algorithm mirror steps 8-11 of the currently specced [\[\[Delete\]\] internal method of Proxies](https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots-delete-p) (where “throw a TypeError exception” is replaced by “return false”, meaning that the integrity check is not passed, and, similarly, “return result” is replaced by “return **true**”.)
 
-Steps 8-9 are a currently missing check that is proposed in [PR 666](https://github.com/tc39/ecma262/pull/666/files).
+Steps 8-9 correspond to steps 12-13 in the ES spec; historically, they were the missing check that was added in [PR 666](https://github.com/tc39/ecma262/pull/666/files).
 
 1. Assert: _result_ is a Boolean.
 2. Assert: _arguments_ is a List containing a unique element, which is a property key.
