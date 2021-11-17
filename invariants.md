@@ -6,7 +6,7 @@ The association between a character and its value is denoted as:
 
 >  character: _value_
 
-Characters are used to describe observed characteristics of an [Object] (https://tc39.github.io/ecma262/#sec-object-type).
+Characters are used to describe observed characteristics of an [Object](https://tc39.github.io/ecma262/#sec-object-type).
 The table below gives the list of characters;
 _P_ represents an arbitrary property key (i.e., a String or a Symbol).
 
@@ -27,7 +27,7 @@ _P_ represents an arbitrary property key (i.e., a String or a Symbol).
  
 ## Observations
 
-When an [internal method] (https://tc39.github.io/ecma262/#sec-object-internal-methods-and-internal-slots) of an Object returns nonabruptly,
+When an [internal method](https://tc39.github.io/ecma262/#sec-object-internal-methods-and-internal-slots) of an Object returns nonabruptly,
 an **<dfn>observation</dfn>**, that consists of a set of association of character and value, may be performed on that Object.
 
 Below is the list of performed observations.
@@ -107,7 +107,7 @@ For example the lock “@value: 7” is put when the following observations are 
 
 ## Invariants of internal methods
 
-The [Invariants of Essential Internal Methods] (https://tc39.github.io/ecma262/#sec-invariants-of-the-essential-internal-methods)
+The [Invariants of Essential Internal Methods](https://tc39.github.io/ecma262/#sec-invariants-of-the-essential-internal-methods)
 are of two kinds
 
 * fixing the form of the value of a nonabrupt completion (e.g., \[\[IsExtensible]]() returns a Boolean);
