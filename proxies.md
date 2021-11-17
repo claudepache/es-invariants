@@ -1,8 +1,8 @@
 # Integrity checks on Proxies
 
-This page aims to identify minimal invariant checks needed on trapped internal methods of [Proxies] (https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots)
-in order to maintain the [invariants of internal methods] (https://tc39.github.io/ecma262/#sec-invariants-of-the-essential-internal-methods)
-as modelled in _[invariants.md] (/invariants.md)_.
+This page aims to identify minimal invariant checks needed on trapped internal methods of [Proxies](https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots)
+in order to maintain the [invariants of internal methods](https://tc39.github.io/ecma262/#sec-invariants-of-the-essential-internal-methods)
+as modelled in _[invariants.md](/invariants.md)_.
 
 ## Fundemental observation methods
 
@@ -12,7 +12,7 @@ The following internal methods are intended to be purely observational. We calle
 * \[\[OwnPropertyKeys]] ()
 * \[\[GetOwnProperty]] (_P_)
 
-They are used to [observe the characters] (/invariants.md#observations) of Objects without modifying them, according to the following table:
+They are used to [observe the characters](/invariants.md#observations) of Objects without modifying them, according to the following table:
 
 Character  |  Internal method
 -----------|-----------------
@@ -24,7 +24,7 @@ configurable(_P_)<br>exists(_P_) _(single key)_<br>enumerable(_P_)<br>type(_P_)<
 
 ## Nonquantum objects
 
-We first concentrate on [Proxies] (https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots) whose target object can be observed without disturbing the state of the program. Specifically we define a **<dfn>nonquantum object</dfn>** as an [Object] (https://tc39.github.io/ecma262/#sec-object-type) whose fundemental observation methods satisfy the two following conditions:
+We first concentrate on [Proxies](https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots) whose target object can be observed without disturbing the state of the program. Specifically we define a **<dfn>nonquantum object</dfn>** as an [Object](https://tc39.github.io/ecma262/#sec-object-type) whose fundemental observation methods satisfy the two following conditions:
 
 1. <i>Running a fundemental observation method of the object will not observably modify the state of the program.</i>
 
@@ -38,7 +38,7 @@ Here, consistency means:
 
 Note that abrupt completions are irrelevant for our purpose.
 
-Every [standard built-in object] (https://tc39.github.io/ecma262/#sec-ecmascript-standard-built-in-objects) is nonquantum. This is probably true for most, if not all, [built-in objects] (https://tc39.github.io/ecma262/#sec-built-in-object) provided by a given ECMAScript implementation such as a web browser.
+Every [standard built-in object](https://tc39.github.io/ecma262/#sec-ecmascript-standard-built-in-objects) is nonquantum. This is probably true for most, if not all, [built-in objects](https://tc39.github.io/ecma262/#sec-built-in-object) provided by a given ECMAScript implementation such as a web browser.
 
 On the other hand, Proxy objects may be quantum. Although it is probably not a good idea for a non-malicious user to create quantum Proxies, we cannot rely on that.
  
@@ -55,12 +55,12 @@ Let **<dfn>IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_)</dfn>*
 
 We want to define the various IntegrityCheck\_<i>Method</i> algorithms so that the two following conditions are satisfied.
 
-> I. IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i> shall return **true** if all [observations] (/invariants.md#observations) that would be made on the Proxy by returning _result_, may be made on _target_ by invoking fundamental observation methods on it.
+> I. IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i> shall return **true** if all [observations](/invariants.md#observations) that would be made on the Proxy by returning _result_, may be made on _target_ by invoking fundamental observation methods on it.
 
 For example, let _P_ be a Proxy with target object _T_. Suppose that the trap triggered by calling _P_.\[\[PreventExtensions]] () wants to return **true**. That would trigger the observation “extensible: **false**” on _P_.
 Then, if the same observation can be made on _T_, e.g. by calling T.\[\[IsExtensible]]() and getting the value **false**, the integrity check is passed.
 
-> II. If the target of a Proxy is a nonquantum object that observes the [Invariants of internal methods] (/invariants.md#invariants-of-internal-methods), then the Proxy shall observe those invariants.</ol>
+> II. If the target of a Proxy is a nonquantum object that observes the [Invariants of internal methods](/invariants.md#invariants-of-internal-methods), then the Proxy shall observe those invariants.</ol>
 
 We restrict ourself to _nonquantum_ target objects, because quantum objects would lead to inextricable complications in edge cases; that issue will be discussed somewhere else (TBW).
 
@@ -76,7 +76,7 @@ We want to prove the following:
 
 ### proof
 
-See _[proxies-proof.md] (proxies-proof.md)_.
+See _[proxies-proof.md](proxies-proof.md)_.
 
 ## Algorithm for the Integry Check methods
 
@@ -84,21 +84,21 @@ As an application of the previous section, we can derive algorithms for Integrit
 
 1. Determine the characters that would be observed on the Proxy if the method returned _result_.
 2. For each “character: _value_” that would be observed:
-  1. Observe “character: _valueT_” on _target_ by invoking the corresponding [fundemantal observation method] (#fundemental-observation-methods).
-  2. If _valueT_ is different from _value_,
-    1. Check whether the lock “@character: _valueT_” can be put on _target_, by invoking the [fundemantal observation methods] (#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on] (/invariants.md#locks). If yes, return **false** (Condition A).
-    1. Check whether the lock “@character: _value_” could be put on _target_ if it were observed on it, by invoking the [fundamental observation methods] (#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on] (/invariants.md#locks). If yes, return **false** (Condition B).
+    1. Observe “character: _valueT_” on _target_ by invoking the corresponding [fundemantal observation method](#fundemental-observation-methods).
+    2. If _valueT_ is different from _value_,
+        1. Check whether the lock “@character: _valueT_” can be put on _target_, by invoking the [fundemantal observation methods](#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on](/invariants.md#locks). If yes, return **false** (Condition A).
+        1. Check whether the lock “@character: _value_” could be put on _target_ if it were observed on it, by invoking the [fundamental observation methods](#fundemental-observation-methods) corresponding to the characters involved in the [chain of locks it depends on](/invariants.md#locks). If yes, return **false** (Condition B).
 3. Return **true**.
 
-Because we have assumed that _target_ is [nonquantum] (#nonquantum-objects), changing the order and the number of calls to its fundemental internal methods is not observable (except when terminating abruptly), so we can avoid to repeat calls of same internal methods with same arguments, and we can reorder them at will (even if, formally, putting a lock on _target_ would need that the methods are called in particular order).
+Because we have assumed that _target_ is [nonquantum](#nonquantum-objects), changing the order and the number of calls to its fundemental internal methods is not observable (except when terminating abruptly), so we can avoid to repeat calls of same internal methods with same arguments, and we can reorder them at will (even if, formally, putting a lock on _target_ would need that the methods are called in particular order).
 
 ### Example: The integrity check for the \[\[Delete]] method
 
 The following algorithm is a valid implementation for IntegrityCheck\_Delete(_arguments_, _result_, _target_).
 
-Steps 4-7 of the algorithm mirror steps 9-12 of the currently specced [\[\[Delete\]\] internal method of Proxies] (https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots-delete-p) (where “throw a TypeError exception” is replaced by “return false”, meaning that the integrity check is not passed, and, similarly, “return result” is replaced by “return **true**”.)
+Steps 4-7 of the algorithm mirror steps 9-12 of the currently specced [\[\[Delete\]\] internal method of Proxies](https://tc39.github.io/ecma262/#sec-proxy-object-internal-methods-and-internal-slots-delete-p) (where “throw a TypeError exception” is replaced by “return false”, meaning that the integrity check is not passed, and, similarly, “return result” is replaced by “return **true**”.)
 
-Steps 8-9 are a currently missing check that is proposed in [PR 666] (https://github.com/tc39/ecma262/pull/666/files).
+Steps 8-9 are a currently missing check that is proposed in [PR 666](https://github.com/tc39/ecma262/pull/666/files).
 
 1. Assert: _result_ is a Boolean.
 2. Assert: _arguments_ is a List containing a unique element, which is a property key.
