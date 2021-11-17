@@ -4,11 +4,11 @@ Recall that **<dfn>IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_
 
 Given the following condition:
 
-> I. IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i> shall return **true** if all [observations] (/invariants.md#observations) that would be made on the Proxy by returning _result_, may be made on _target_ by invoking fundamental observation methods on it.
+> I. IntegrityCheck\_<i>Method</i>_(_arguments_, _result_, _target_)</i> shall return **true** if all [observations](/invariants.md#observations) that would be made on the Proxy by returning _result_, may be made on _target_ by invoking fundamental observation methods on it.
 
 we want that to prove that the following condition is satisfied:
 
-> II. If the target of a Proxy is a nonquantum object that observes the [Invariants of internal methods] (/invariants.md#invariants-of-internal-methods), then the Proxy shall observe those invariants.</ol>
+> II. If the target of a Proxy is a nonquantum object that observes the [Invariants of internal methods](/invariants.md#invariants-of-internal-methods), then the Proxy shall observe those invariants.</ol>
 
 
 when the IntegrityCheck\_<i>Method</i>(_arguments_, _result_, _target_) abstract operations returns **false** unless the two following conditions are enforced:
@@ -25,7 +25,7 @@ Let us show that, if the integrity check is passed, Condition A and B must hold.
 
 Consider the following programm:
 
-1\. Construct an ordinary object _target_  for which the observation of characters using its [fundemental observation methods] (/proxies.md#fundemental-observation-methods) would produce some predefined result.
+1\. Construct an ordinary object _target_  for which the observation of characters using its [fundemental observation methods](/proxies.md#fundemental-observation-methods) would produce some predefined result.
 
 2\. Construct a Proxy _P_ with _target_ as its target object, and whose trap will return some predefined arbitrary result without modifying _target_, as follows:
 
